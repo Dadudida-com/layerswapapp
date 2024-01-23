@@ -5,8 +5,12 @@ import ContactSupport from "./ContactSupport"
 import MessageComponent from "./MessageComponent"
 import Navbar from "./navbar"
 import GoHomeButton from "./utils/GoHome"
+import { IsExtensionError } from "../helpers/errorHelper";
 
 export default function ErrorFallback({ error, resetErrorBoundary }) {
+
+    const extension_error = IsExtensionError(error)
+
     return (
         <div className="styled-scroll">
             <main className="styled-scroll">
@@ -20,10 +24,23 @@ export default function ErrorFallback({ error, resetErrorBoundary }) {
                                 </MessageComponent.Header>
                                 <MessageComponent.Description>
                                     <p>
-                                        Sorry, but we were unable to complete this request. We are informed, and are now investigating the issue.
+                                        <span>Sorry, but we were unable to complete this request.&nbsp;</span>
+                                        {
+                                            extension_error ?
+                                                <span>It seems that some of your extensions are preventing the app from running.</span>
+                                                : <span>We are informed, and are now investigating the issue.</span>
+                                        }
+
                                     </p>
                                     <p>
-                                        <span>Please try again. If the issue keeps happening,&nbsp;</span><span className="underline cursor-pointer text-primary "><ContactSupport>contact our support team.</ContactSupport></span>
+                                        {
+                                            extension_error ?
+                                                <span>Please disable extensions and try again or open in incognito mode. If the issue keeps happening,&nbsp;</span>
+                                                :
+                                                <span>Please try again. If the issue keeps happening,&nbsp;</span>
+                                        }
+
+                                        <span className="underline cursor-pointer text-primary "><ContactSupport>contact our support team.</ContactSupport></span>
                                     </p>
                                 </MessageComponent.Description>
                             </MessageComponent.Content>

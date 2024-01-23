@@ -8,14 +8,14 @@ import {
 } from '@rainbow-me/rainbowkit';
 const WALLETCONNECT_PROJECT_ID = '28168903b2d30c75e5f7f2d71902581b';
 import { publicProvider } from 'wagmi/providers/public';
-import { walletConnectWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, bitgetWallet, argentWallet } from '@rainbow-me/rainbowkit/wallets';
+import { walletConnectWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, bitgetWallet, argentWallet, phantomWallet } from '@rainbow-me/rainbowkit/wallets';
 import { useSettingsState } from "../context/settings";
 import { Chain, WagmiConfig, configureChains, createConfig } from "wagmi";
 import { NetworkType } from "../Models/CryptoNetwork";
 import resolveChain from "../lib/resolveChain";
 import React from "react";
-import NoCookies from "./NoCookies";
 import AddressIcon from "./AddressIcon";
+import NoCookies from "./NoCookies";
 
 type Props = {
     children: JSX.Element | JSX.Element[]
@@ -24,9 +24,6 @@ type Props = {
 function RainbowKitComponent({ children }: Props) {
     const settings = useSettingsState();
 
-    if (!navigator?.cookieEnabled) {
-        return <NoCookies />
-    }
     const isChain = (c: Chain | undefined): c is Chain => c != undefined
     const settingsChains = settings?.networks
         .sort((a, b) => Number(a.chain_id) - Number(b.chain_id))
@@ -38,7 +35,7 @@ function RainbowKitComponent({ children }: Props) {
         settingsChains,
         [publicProvider()]
     );
-
+    let chainExceptZkSyncEra = chains.filter(x=> x.id != 324);
     const projectId = WALLETCONNECT_PROJECT_ID;
     const connectors = connectorsForWallets([
         {
@@ -52,9 +49,10 @@ function RainbowKitComponent({ children }: Props) {
             groupName: 'Wallets',
             wallets: [
                 coinbaseWallet({ chains, appName: 'Layerswap' }),
-                argentWallet({ projectId, chains }),
+                argentWallet({ projectId, chains: chainExceptZkSyncEra }),
                 bitgetWallet({ projectId, chains }),
-                rainbowWallet({ projectId, chains })
+                rainbowWallet({ projectId, chains }),
+                phantomWallet({ chains})
             ],
         },
     ]);

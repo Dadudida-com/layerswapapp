@@ -1,9 +1,12 @@
 export type ApiError = {
-    code: KnownErrorCode | string,
+    code: LSAPIKnownErrorCode | string,
     message: string;
+    metadata: {
+        AvailableTransactionAmount: number
+    }
 }
 
-export enum KnownErrorCode {
+export enum LSAPIKnownErrorCode {
     NOT_FOUND = "NOT_FOUND",
     INVALID_CREDENTIALS = "INVALID_CREDENTIALS",
     INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS",
@@ -14,5 +17,6 @@ export enum KnownErrorCode {
     NETWORK_ACCOUNT_ALREADY_EXISTS = "NETWORK_ACCOUNT_ALREADY_EXISTS",
     BLACKLISTED_ADDRESS = "BLACKLISTED_ADDRESS",
     INVALID_ADDRESS_ERROR = "INVALID_ADDRESS_ERROR",
-    UNACTIVATED_ADDRESS_ERROR = "UNACTIVATED_ADDRESS_ERROR"
+    UNACTIVATED_ADDRESS_ERROR = "UNACTIVATED_ADDRESS_ERROR",
+    NETWORK_CURRENCY_DAILY_LIMIT_REACHED = "NETWORK_CURRENCY_DAILY_LIMIT_REACHED"
 }
